@@ -1,0 +1,39 @@
+enabled: true
+
+rules:
+  ignore_paths:
+    value:
+      - vendor/**/*
+      - lib/assets/**/*
+
+  line_length:
+    value: 80
+
+  string_literals:
+    value: single_quotes
+    options:
+      - single_quotes
+      - double_quotes
+
+  hash_syntax:
+    value: true
+
+  collection_methods:
+    value:
+      map: map
+      reduce: reduce
+      find: detect
+      filter: select
+    options:
+      map:
+        - map
+        - collect
+      reduce:
+        - reduce
+        - inject
+      find:
+        - find
+        - detect
+      filter:
+        - find_all
+        - select
