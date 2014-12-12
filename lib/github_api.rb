@@ -107,6 +107,10 @@ class GithubApi
     end
   end
 
+  def orgs
+    client.orgs
+  end
+
   private
 
   def add_user_to_org(username, repo)
@@ -179,10 +183,6 @@ class GithubApi
     end
 
     authorized_repos(repos)
-  end
-
-  def orgs
-    client.orgs
   end
 
   def authorized_repos(repos)
