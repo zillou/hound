@@ -64,4 +64,10 @@ FactoryGirl.define do
     github_id
     github_name
   end
+
+  factory :style_guide_config do
+    name "ruby"
+    enabled true
+    owner
+  end
 end

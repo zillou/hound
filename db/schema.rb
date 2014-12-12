@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141211224528) do
+ActiveRecord::Schema.define(version: 20141212013513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "builds", force: true do |t|
     t.text     "violations"
@@ -73,10 +74,21 @@ ActiveRecord::Schema.define(version: 20141211224528) do
     t.datetime "updated_at"
     t.boolean  "private"
     t.boolean  "in_organization"
+    t.boolean  "enabled",          default: false, null: false
   end
 
-  add_index "repos", ["active"], name: "index_repos_on_active", using: :btree
-  add_index "repos", ["github_id"], name: "index_repos_on_github_id", using: :btree
+  add_index "repos", ["enabled"], name: "index_repos_on_enabled", using: :btree
+
+  create_table "style_guide_configs", force: true do |t|
+    t.string   "name",       null: false
+    t.boolean  "enabled",    null: false
+    t.integer  "owner_id",   null: false
+    t.hstore   "rules"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "style_guide_configs", ["owner_id", "name"], name: "index_style_guide_configs_on_owner_id_and_name", unique: true, using: :btree
 
   create_table "subscriptions", force: true do |t|
     t.datetime "created_at",                                                   null: false
