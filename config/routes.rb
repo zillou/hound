@@ -11,7 +11,7 @@ Houndapp::Application.routes.draw do
   resource :account, only: [:show]
   resources :builds, only: [:create]
   resources :owners, only: [] do
-    resources :style_guides, only: [:show]
+    resources :style_guides, only: [:show, :update]
   end
 
   resources :repos, only: [:index] do
