@@ -1,21 +1,22 @@
-require "spec_helper"
+require "fast_spec_helper"
 require "app/jobs/buildable"
-require "app/models/owner"
 require "app/models/payload"
-require "app/services/build_runner"
 
 describe Buildable do
   class TestJob
     extend Buildable
   end
 
+  before do
+    stub_const("BuildRunner", double)
+    stub_const("Owner", double(upsert: nil))
+  end
+
   describe '.perform' do
     it 'runs build runner' do
-      build_runner = double(:build_runner, run: nil)
       payload = double("Payload", repository_owner_id: 1, repository_owner_name: "test")
+      build_runner = stub_build_runner
       allow(Payload).to receive(:new).and_return(payload)
-      allow(BuildRunner).to receive(:new).and_return(build_runner)
-      allow(Owner).to receive(:upsert)
 
       TestJob.perform(payload_data)
 
@@ -37,8 +38,7 @@ describe Buildable do
       github_id = "2345"
       github_name = "thoughtbot"
       payload_data = payload_data(github_id: github_id, github_name: github_name)
-      build_runner = double("BuildRunner", run: true)
-      allow(BuildRunner).to receive(:new).and_return(build_runner)
+      stub_build_runner
       allow(Owner).to receive(:upsert)
 
       TestJob.perform(payload_data)
@@ -46,6 +46,12 @@ describe Buildable do
       expect(Owner).to have_received(:upsert).
         with(github_id: github_id, github_name: github_name)
     end
+  end
+
+  def stub_build_runner
+    build_runner = double(:build_runner, run: nil)
+    allow(BuildRunner).to receive(:new).and_return(build_runner)
+    build_runner
   end
 
   def payload_data(github_id: 1234, github_name: "test")
