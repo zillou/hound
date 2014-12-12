@@ -158,10 +158,6 @@ class GithubApi
     authorized_repos(repos)
   end
 
-  def orgs
-    client.orgs
-  end
-
   def authorized_repos(repos)
     repos.select { |repo| repo.permissions.admin }
   end
