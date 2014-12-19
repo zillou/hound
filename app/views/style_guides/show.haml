@@ -10,11 +10,10 @@
     repo has a `hound.yml`, then these rules will be overridden.
 
   = form_for @style_guide_config, url: "/owners/1/style_guides/#{@style_guide_config.id}", method: :put, class: "ruleset" do |config|
-    .rule.active-rule
-      .rule-header
-        %h2.rule-name Line Length
-        %input.toggle-check{type: "checkbox", id: "line-length"}
-        %label.toggle{for: "line-length"}
+    .rule
+      %h2.rule-name Line Length
+      %input.toggle-check{type: "checkbox", id: "line-length"}
+      %label.toggle{for: "line-length"}
       %dl.extra-options
         %dt
           %label{for: "max-length"} Max Length
@@ -22,11 +21,10 @@
           %input#max-length{type: "Number", name: "style_guide_config[rules][line_length][value]", value: @style_guide_config.rules["line_length"]["value"]}
           characters
 
-    .rule.active-rule
-      .rule-header
-        %h2.rule-name Single / Double Quotes
-        %input.toggle-check{type: "checkbox", id: "quotes"}
-        %label.toggle{for: "quotes"}
+    .rule
+      %h2.rule-name Single / Double Quotes
+      %input.toggle-check{type: "checkbox", id: "quotes"}
+      %label.toggle{for: "quotes"}
       %dl.extra-options
         %dt
           %label{for: "quotes"} Preferred Quotation Mark Type
@@ -36,61 +34,58 @@
           %input#quotes-double{type: "radio", name: "style_guide_config[rules][string_literals][value]", value: "double_quotes"}
           %label{for: "quotes-double"} Double
 
-    .rule.active-rule
-      .rule-header
-        %h2.rule-name Ignore Paths
-        %input.toggle-check{type: "checkbox", id: "paths"}
-        %label.toggle{for: "paths"}
+    .rule
+      %h2.rule-name Ignore Paths
+      %input.toggle-check{type: "checkbox", id: "paths"}
+      %label.toggle{for: "paths"}
       %dl.extra-options
         %dt
           %label{for: "path-name"} Path
         %dd
           %input#path-name{type: "text", name: "style_guide_config[rules][ignore_paths][value]", value: @style_guide_config.rules["ignore_paths"]["value"] }
 
-    .rule.active-rule
-      .rule-header
-        %h2.rule-name Hash Syntax Type
-        %input.toggle-check{type: "checkbox", id: "hash-syntax", name: "style_guide_config[rules][hash_syntax][value]"}
-        %label.toggle{for: "hash-syntax"}
+    .rule
+      %h2.rule-name Hash Syntax Type
+      %input.toggle-check{type: "checkbox", id: "hash-syntax", name: "style_guide_config[rules][hash_syntax][value]"}
+      %label.toggle{for: "hash-syntax"}
       %dl.extra-options
         %dt
           Hash Syntax Type
         %dd
           Ruby 1.9 Hash syntax (Hash Rockets will be considered invalid)
 
-    .rule.active-rule
-      .rule-header
-        %h2.rule-name Collection Methods
-        %input.toggle-check{type: "checkbox", id: "collection"}
-        %label.toggle{for: "collection"}
+    .rule
+      %h2.rule-name Collection Methods
+      %input.toggle-check{type: "checkbox", id: "collection"}
+      %label.toggle{for: "collection"}
       %dl.extra-options.multiple-options
         %dt
           %label{for: 'collection-map'} Map
         %dd
           %select#collection-map{name: "style_guide_config[rules][collection_methods][map][value]" }
-            %option{ value: "map" } Map
-            %option{ value: "collect" } Collect
+            %option{ value: "map", selected: @style_guide_config.rules['collection_methods']['map']['value'] == "map"  } Map
+            %option{ value: "collect", selected: @style_guide_config.rules['collection_methods']['map']['value'] == "collect"  } Collect
 
         %dt
           %label{for: 'collection-reduce'} Reduce
         %dd
           %select#collection-reduce{name: "style_guide_config[rules][collection_methods][reduce][value]" }
-            %option{ value: "reduce" } Reduce
-            %option{ value: "inject" } Inject
+            %option{ value: "reduce", selected: @style_guide_config.rules['collection_methods']['reduce']['value'] == "reduce" } Reduce
+            %option{ value: "inject", selected: @style_guide_config.rules['collection_methods']['reduce']['value'] == "inject"  } Inject
 
         %dt
           %label{for: 'collection-find'} Find
         %dd
           %select#collection-find{name: "style_guide_config[rules][collection_methods][find][value]" }
-            %option{ value: "find" } Find
-            %option{ value: "detect" } Detect
+            %option{ value: "find", selected: @style_guide_config.rules['collection_methods']['find']['value'] == "find"  } Find
+            %option{ value: "detect", selected: @style_guide_config.rules['collection_methods']['find']['value'] == "detect" } Detect
 
         %dt
           %label{for: 'collection-filter'} Filter
         %dd
           %select#collection-filter{name: "style_guide_config[rules][collection_methods][filter][value]" }
-            %option{ value: "filter" } Filter
-            %option{ value: "detect" } Detect
+            %option{ value: "find_all", selected: @style_guide_config.rules['collection_methods']['filter']['value'] == "find_all"   } Find All
+            %option{ value: "select", selected: @style_guide_config.rules['collection_methods']['filter']['value'] == "select"   } Select
 
     .ruleset-actions
       %input.button{type: 'submit', value: 'Save Rules'}

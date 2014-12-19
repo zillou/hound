@@ -7,15 +7,17 @@
 }
 
 .rule {
-  .rule-header {
-    @include clearfix;
-    background: #F7F8FA;
-    box-shadow: 0 1px 2px 0 rgba(#F0F0F0, 0.70);
-  }
+  @include clearfix;
+  background: #F7F8FA;
+  box-shadow: 0 1px 2px 0 rgba(#F0F0F0, 0.70);
+  border: 1px solid #E0E0E0;
+  position: relative;
 
-  .rule-header,
   .extra-options {
-    border: 1px solid #E0E0E0;
+    @include clearfix;
+    background: #fff;
+    border-top: 1px solid $base-border-color;
+    display: none;
     padding: 1rem;
   }
 
@@ -24,15 +26,8 @@
     margin: 0;
   }
 
-  &.active-rule {
-    .extra-options {
-      display: block;
-    }
-  }
-
   .extra-options {
     @include clearfix;
-    border-top: none;
     display: none;
     font-size: em(13px);
 
@@ -64,9 +59,9 @@
   }
 
   .rule-name {
-    float: left;
     font-size: 1em;
     font-weight: normal;
+    padding: 1em;
   }
 
   input[type="number"] {
@@ -78,14 +73,13 @@
   }
 
   .toggle {
+    @include position(absolute, 0.85em 1em null null);
     @include user-select(none);
     border-radius: 24px;
     border: 1px solid darken($base-border-color, 5%);
     display: block;
-    float: right;
     height: 24px;
     padding: 1px;
-    position: relative;
     width: 50px;
 
     &:hover {
@@ -120,6 +114,10 @@
     background-color: rgb(255,255,255);
     left: 26px;
   }
+}
+
+.toggle-check:checked ~ .extra-options {
+  display: block;
 }
 
 .ruleset-actions {
