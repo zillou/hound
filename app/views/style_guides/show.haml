@@ -6,26 +6,28 @@
   %h1 thoughtbot's style guides
   %p
     Toggle on and off different style rules for your entire organization.  For
-    advanced configurations, see our awesome configuration instructions. If your
-    repo has a `hound.yml`, then these rules will be overridden.
+    advanced configurations, see our awesome configuration instructions. If
+    your repo has a `hound.yml`, then these rules will be overridden.
 
   = form_for @style_guide_config,
-    url: "/owners/1/style_guides/#{@style_guide_config.id}",
+    url: owner_style_guide_path(@style_guide_config.owner, @style_guide_config),
     method: :put,
     class: "ruleset" do |config|
 
     .rule
       %h2.rule-name Line Length
+
       %input.toggle-check{type: "checkbox", id: "line-length"}
       %label.toggle{for: "line-length"}
       %section.extra-options
         %dl
           %dt
-            %label{for: "max-length"} Max Length
+            = label_tag "style_guide_config[rules][line_length][value]", "Max Length"
           %dd
-            %input#max-length{type: "Number",
-              name: "style_guide_config[rules][line_length][value]",
-              value: @style_guide_config.rules["line_length"]["value"]}
+            = number_field_tag "style_guide_config[rules][line_length][value]",
+              @style_guide_config.rules['line_length']['value'],
+              id: "max-length",
+              maxlength: '3'
             characters
 
     .rule
