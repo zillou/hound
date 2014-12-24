@@ -16,15 +16,17 @@ class RepoConfig
   end
 
   def for(style_guide_name)
-    if style_guide_name == "ruby" && legacy_config?
-      hound_config
-    else
-      config_file_path = config_path_for(style_guide_name)
-
-      if config_file_path
-        load_file(config_file_path, FILE_TYPES[style_guide_name])
+    style_guides[style_guide_name] ||= begin
+      if style_guide_name == "ruby" && legacy_config?
+        hound_config
       else
-        {}
+        config_file_path = config_path_for(style_guide_name)
+
+        if config_file_path
+          load_file(config_file_path, FILE_TYPES[style_guide_name])
+        else
+          {}
+        end
       end
     end
   end
@@ -105,5 +107,9 @@ class RepoConfig
   rescue JSON::ParserError
     @invalid = true
     {}
+  end
+
+  def style_guides
+    @style_guides ||= {}
   end
 end
