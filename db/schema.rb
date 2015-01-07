@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141212204648) do
+ActiveRecord::Schema.define(version: 20141219224840) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,11 +39,11 @@ ActiveRecord::Schema.define(version: 20141212204648) do
 
   add_index "memberships", ["repo_id", "user_id"], name: "index_memberships_on_repo_id_and_user_id", using: :btree
 
-  create_table "owners", force: true do |t|
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.integer  "github_id",   null: false
-    t.string   "github_name", null: false
+  create_table "owners", force: :cascade do |t|
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "github_id",               null: false
+    t.string   "github_name", limit: 255, null: false
   end
 
   add_index "owners", ["github_id"], name: "index_owners_on_github_id", unique: true, using: :btree
@@ -63,13 +63,13 @@ ActiveRecord::Schema.define(version: 20141212204648) do
   add_index "repos", ["active"], name: "index_repos_on_active", using: :btree
   add_index "repos", ["github_id"], name: "index_repos_on_github_id", unique: true, using: :btree
 
-  create_table "style_guide_configs", force: true do |t|
-    t.string   "name",       null: false
-    t.boolean  "enabled",    null: false
-    t.integer  "owner_id",   null: false
+  create_table "style_guide_configs", force: :cascade do |t|
+    t.string   "name",       limit: 255, null: false
+    t.boolean  "enabled",                null: false
+    t.integer  "owner_id",               null: false
     t.json     "rules"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   add_index "style_guide_configs", ["owner_id", "name"], name: "index_style_guide_configs_on_owner_id_and_name", unique: true, using: :btree
@@ -100,13 +100,13 @@ ActiveRecord::Schema.define(version: 20141212204648) do
   add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
 
   create_table "violations", force: :cascade do |t|
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
-    t.integer  "build_id",                                null: false
-    t.string   "filename",       limit: 255,              null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "build_id",                    null: false
+    t.string   "filename",                    null: false
     t.integer  "patch_position"
     t.integer  "line_number"
-    t.text     "messages",                   default: [], null: false, array: true
+    t.text     "messages",       default: [], null: false, array: true
   end
 
   add_index "violations", ["build_id"], name: "index_violations_on_build_id", using: :btree
