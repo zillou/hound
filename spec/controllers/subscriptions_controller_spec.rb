@@ -7,8 +7,9 @@ describe SubscriptionsController, "#create" do
       repo = create(:repo, private: true)
       membership = create(:membership, repo: repo)
       activator = double(:repo_activator, activate: true)
+      repo_subscriber = double("RepoSubscriber", subscribe: true)
       allow(RepoActivator).to receive(:new).and_return(activator)
-      allow(RepoSubscriber).to receive(:subscribe).and_return(true)
+      allow(RepoSubscriber).to receive(:new).and_return(repo_subscriber)
       allow(JobQueue).to receive(:push)
       stub_sign_in(membership.user, token)
 
@@ -21,9 +22,10 @@ describe SubscriptionsController, "#create" do
       )
 
       expect(activator).to have_received(:activate)
+      expect(repo_subscriber).to have_received(:subscribe)
       expect(RepoActivator).to have_received(:new).
         with(repo: repo, github_token: token)
-      expect(RepoSubscriber).to have_received(:subscribe).
+      expect(RepoSubscriber).to have_received(:new).
         with(repo, membership.user, "cardtoken")
       expect(analytics).to have_tracked("Repo Activated").
         for_user(membership.user).
@@ -41,8 +43,9 @@ describe SubscriptionsController, "#create" do
       repo = create(:repo)
       user.repos << repo
       activator = double(:repo_activator, activate: true)
+      repo_subscriber = double("RepoSubscriber", subscribe: true)
       allow(RepoActivator).to receive(:new).and_return(activator)
-      allow(RepoSubscriber).to receive(:subscribe).and_return(true)
+      allow(RepoSubscriber).to receive(:new).and_return(repo_subscriber)
       allow(JobQueue).to receive(:push)
       stub_sign_in(user)
 
@@ -62,15 +65,50 @@ describe SubscriptionsController, "#create" do
     it "deactivates repo" do
       membership = create(:membership)
       repo = membership.repo
-      activator = double(:repo_activator, activate: true, deactivate: nil)
+      activator = double(
+        "RepoActivator",
+        activate: true,
+        deactivate: nil,
+        errors: []
+      )
+      repo_subscriber = double(
+        "RepoSubscriber",
+        subscribe: nil,
+        errors: ["error"]
+      )
       allow(RepoActivator).to receive(:new).and_return(activator)
-      allow(RepoSubscriber).to receive(:subscribe).and_return(false)
+      allow(RepoSubscriber).to receive(:new).and_return(repo_subscriber)
       stub_sign_in(membership.user)
 
       post :create, repo_id: repo.id, format: :json
 
-      expect(response.code).to eq "502"
       expect(activator).to have_received(:deactivate)
+    end
+
+    it "returns 502 with errors" do
+      membership = create(:membership)
+      repo = membership.repo
+      activator = double(
+        "RepoActivator",
+        activate: true,
+        deactivate: nil,
+        errors: []
+      )
+      error_message = "Stripe failure"
+      repo_subscriber = double(
+        "RepoSubscriber",
+        subscribe: nil,
+        errors: [error_message]
+      )
+      allow(RepoActivator).to receive(:new).and_return(activator)
+      allow(RepoSubscriber).to receive(:new).and_return(repo_subscriber)
+      stub_sign_in(membership.user)
+
+      post :create, repo_id: repo.id, format: :json
+
+      response_body = JSON.parse(response.body)
+      expect(response.code).to eq "502"
+      expect(response_body["errors"]).to match_array([error_message])
     end
   end
 end

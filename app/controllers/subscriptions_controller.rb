@@ -12,8 +12,7 @@ class SubscriptionsController < ApplicationController
       render json: repo, status: :created
     else
       activator.deactivate
-
-      head 502
+      render json: { errors: error_messages }, status: 502
     end
   end
 
@@ -42,11 +41,23 @@ class SubscriptionsController < ApplicationController
   end
 
   def create_subscription
-    RepoSubscriber.subscribe(repo, current_user, params[:card_token])
+    repo_subscriber.subscribe(repo, current_user, params[:card_token])
   end
 
   def delete_subscription
     RepoSubscriber.unsubscribe(repo, repo.subscription.user)
+  end
+
+  def repo_subscriber
+    @repo_subscriber ||= RepoSubscriber.new(
+      repo,
+      current_user,
+      params[:card_token]
+    )
+  end
+
+  def error_messages
+    activator.errors + repo_subscriber.errors
   end
 
   def update_email_address
