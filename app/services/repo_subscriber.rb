@@ -1,5 +1,9 @@
 class RepoSubscriber
-  pattr_initialize :repo, :user, :card_token
+  attr_reader :errors
+
+  pattr_initialize :repo, :user, :card_token do |repo_subscriber|
+    @errors = []
+  end
 
   def self.subscribe(repo, user, card_token)
     new(repo, user, card_token).subscribe
@@ -27,6 +31,9 @@ class RepoSubscriber
       price: repo.plan_price
     )
   rescue => error
+    if error.class == Stripe::CardError
+      errors.push(error.message)
+    end
     report_exception(error)
     stripe_subscription.try(:delete)
     nil

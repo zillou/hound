@@ -144,4 +144,21 @@ describe RepoSubscriber do
       end
     end
   end
+
+  describe "#subscribe" do
+    context "when Stripe subscription fails due to card error" do
+      it "adds errors" do
+        repo = create(:repo)
+        user = create(:user, repos: [repo])
+        stub_customer_create_request(user)
+        stub_failed_subscription_create_request(repo.plan_type)
+        error_message = "Your credit card was declined"
+        repo_subscriber = RepoSubscriber.new(repo, user, "cardtoken")
+
+        repo_subscriber.subscribe
+
+        expect(repo_subscriber.errors).to match_array([error_message])
+      end
+    end
+  end
 end
