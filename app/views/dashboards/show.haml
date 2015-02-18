@@ -1,0 +1,19 @@
+%h1 Dashboard
+
+%h2 Violations by Repo
+#violations_count
+
+:javascript
+  var violationCounts = #{raw @violation_counts};
+  var chart = c3.generate({
+    bindto: "#violations_count",
+      data: {
+        columns: violationCounts,
+        type: "bar"
+      },
+      bar: {
+          width: {
+              ratio: 0.5 // this makes bar width 50% of length between ticks
+          }
+      }
+  });
