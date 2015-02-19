@@ -6,12 +6,11 @@ class ViolationAnalytics
   def violation_counts
     violation_counts = []
 
-    @repos.each do |repo|
+    @repos[0..3].each do |repo|
       builds = repo.builds
       messages = builds
-        .map { |build| build.violations }.flatten
-        .map { |violation| violation.messages }
-        .flatten
+        .flat_map { |build| build.violations }
+        .flat_map { |violation| violation.messages }
       violation_counts << messages.group_by do |message|
         message[0..18]
       end.map do |message, matching_messages|
