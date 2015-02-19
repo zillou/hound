@@ -1,10 +1,12 @@
 %h1 Dashboard
 
-%h2 Violations by Repo
+%h2 Most Common Violations
 #violations_count
 
 :javascript
   var violationCounts = #{raw @violation_counts};
+  console.log(violationCounts);
+  var groups = #{raw @groups}
   var chart = c3.generate({
     bindto: "#violations_count",
       data: {
