@@ -6,7 +6,6 @@
 :javascript
   var violationCounts = #{raw @violation_counts};
   console.log(violationCounts);
-  var groups = #{raw @groups}
   var chart = c3.generate({
     bindto: "#violations_count",
       data: {
