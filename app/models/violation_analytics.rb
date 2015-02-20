@@ -4,19 +4,19 @@ class ViolationAnalytics
   end
 
   def violation_counts
-    violation_counts = []
+    violation_counts = messages.group_by { |message| message[0..18] }
+      .map { |message, matching_messages| [message, matching_messages.count] }
+    violation_counts.sort_by { |a, b| b }.reverse.take(10)
+  end
 
-    @repos[0..3].each do |repo|
+  private
+
+  def messages
+    @repos[0..3].flat_map do |repo|
       builds = repo.builds
-      messages = builds
+      builds
         .flat_map { |build| build.violations }
         .flat_map { |violation| violation.messages }
-      violation_counts << messages.group_by do |message|
-        message[0..18]
-      end.map do |message, matching_messages|
-        [message, matching_messages.count]
-      end
     end
-    violation_counts.flatten(1).sort_by { |a, b| b }.reverse.take(10)
   end
 end
