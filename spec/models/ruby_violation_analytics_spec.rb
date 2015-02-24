@@ -17,7 +17,7 @@ describe RubyViolationAnalytics do
       expect(analytics.violation_counts).to eq(
         [
           ["Test message!", 2],
-          ["Line is too long", 1]
+          ["Line is too long. [81/80]", 1]
         ]
       )
     end
