@@ -48,6 +48,7 @@ class RepoConfig
 
   def disabled?(language)
     options = options_for(language)
+    # enabling
     options["enabled"] == false || options["Enabled"] == false
   end
 

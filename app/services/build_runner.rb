@@ -13,11 +13,20 @@ class BuildRunner
       commenter.comment_on_violations(priority_violations)
       create_success_status
       upsert_owner
+
+      # get the merged configs and persist them
+      save_owner_style_configs
+
       track_subscribed_build_completed
     end
   end
 
   private
+
+  def save_owner_style_configs
+    # code goes here
+    Owner.find_by(github_id: payload.repository_owner_id).style_configs.create!(language: 1)
+  end
 
   def relevant_pull_request?
     pull_request.opened? || pull_request.synchronize?

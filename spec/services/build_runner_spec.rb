@@ -139,6 +139,38 @@ describe BuildRunner, '#run' do
         organization: true
       )
     end
+
+    context "without existing style_configs" do
+      it "creates the owner style configs" do
+        owner = create(:owner)
+        repo = create(:repo, :active, github_id: 123, private: true, owner: owner)
+        style_configs_count = 4
+        payload = stubbed_payload(
+          repository_owner_id: owner.github_id,
+          github_repo_id: repo.github_id
+        )
+        stubbed_pull_request
+        stubbed_style_checker_with_violations
+        stubbed_commenter
+        stubbed_github_api
+        build_runner = BuildRunner.new(payload)
+
+        #expect(StyleGuide).to_have_received(:merged_config).with(
+        #   language: language,
+        #   owner_id: owner_id
+        # )
+
+        expect { build_runner.run }.to change {
+          owner.style_configs.count
+        }.by(style_configs_count)
+      end
+    end
+
+    context "with an existing style_config" do
+      it "updates the owner style_config" do
+        pending
+      end
+    end
   end
 
   context 'without active repo' do
