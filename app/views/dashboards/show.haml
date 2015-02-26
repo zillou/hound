@@ -1,20 +1,32 @@
 %h1 Dashboard
 
 %h2 Most Common Ruby Violations
-#violations_count
+.violations-count-table
+  - @violation_counts.each do |violation_count|
+    .violation-name= violation_count[0]
+    .violation-count= violation_count[1]
+    .violation-bar{ "data-violation_count" => violation_count[1] }
+      %svg.svg-container
 
-:javascript
-  var violationCounts = #{raw @violation_counts};
-  console.log(violationCounts);
-  var chart = c3.generate({
-    bindto: "#violations_count",
-      data: {
-        columns: violationCounts,
-        type: "bar"
-      },
-      bar: {
-        width: {
-          ratio: 0.5 // this makes bar width 50% of length between ticks
-        }
-      }
-  });
+:coffeescript
+  violationBar = d3.selectAll(".violation-bar")
+  violationBarWidth = parseFloat(violationBar.style("width"))
+  violationBar.select("svg").attr("width", violationBarWidth)
+
+  yScale = d3.scale.linear()
+    .domain([0, 2000])
+    .range([0, violationBarWidth])
+
+  violationBar.each (index) ->
+    violationCount = d3.select(this)
+      .attr("data-violation_count")
+
+    d3.select(this)
+      .select("svg")
+      .append("rect")
+      .attr(
+        x: 0
+        y: 0
+        width: yScale(violationCount)
+        height: 20
+      )

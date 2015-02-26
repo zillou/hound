@@ -1,0 +1,16 @@
+.violations-count-table {
+  @include outer-container;
+  font-size: 0.85em;
+
+  .violation-name { @include span-columns(4); }
+  .violation-count { @include span-columns(1); }
+  .violation-bar { @include span-columns(6); }
+
+  svg.svg-container {
+    height: 86px;
+
+    rect {
+      fill: rgb(192, 153, 222);
+    }
+  }
+}

@@ -2,7 +2,6 @@
 //= require angular-resource
 //= require namespaced
 //= require d3
-//= require c3/c3
 //= require_self
 //= require_tree .
 
