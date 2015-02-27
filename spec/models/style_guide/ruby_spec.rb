@@ -412,6 +412,18 @@ end
       expect(violations).to eq ["Use the new Ruby 1.9 hash syntax."]
     end
 
+    it "uses custom config over default" do
+      config = {
+        "Style/HashSyntax" => {
+          "EnforcedStyle" => "hash_rockets"
+        }
+      }
+
+      violations = violations_with_config(config)
+
+      expect(violations).to be_empty
+    end
+
     it "can use custom configuration to display rubocop cop names" do
       config = { "AllCops" => { "DisplayCopNames" => "true" } }
 
