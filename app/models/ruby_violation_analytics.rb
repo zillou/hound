@@ -19,6 +19,7 @@ class RubyViolationAnalytics
     @messages ||= @repos.flat_map do |repo|
       build_ids = repo.build_ids
       violations = Violation.where(build_id: build_ids)
+        .where("filename ILIKE ?", "%.rb")
       violations.flat_map { |violation| violation.messages }
     end
   end

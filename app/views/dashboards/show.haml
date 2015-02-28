@@ -1,32 +1,12 @@
+- content_for :body_class, "dashboard"
 %h1 Dashboard
 
 %h2 Most Common Ruby Violations
 .violations-count-table
   - @violation_counts.each do |violation_count|
     .violation-name= violation_count[0]
-    .violation-count= violation_count[1]
-    .violation-bar{ "data-violation_count" => violation_count[1] }
+    .violation-bar{ "dashboard-bar" => ""}
+      %span.violation-count= violation_count[1]
       %svg.svg-container
 
-:coffeescript
-  violationBar = d3.selectAll(".violation-bar")
-  violationBarWidth = parseFloat(violationBar.style("width"))
-  violationBar.select("svg").attr("width", violationBarWidth)
-
-  yScale = d3.scale.linear()
-    .domain([0, 2000])
-    .range([0, violationBarWidth])
-
-  violationBar.each (index) ->
-    violationCount = d3.select(this)
-      .attr("data-violation_count")
-
-    d3.select(this)
-      .select("svg")
-      .append("rect")
-      .attr(
-        x: 0
-        y: 0
-        width: yScale(violationCount)
-        height: 20
-      )
+= render 'preload_template', template: 'dashboard'
