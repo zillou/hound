@@ -38,7 +38,8 @@ module StyleGuide
     def merged_config
       RuboCop::ConfigLoader.merge(default_config, custom_config)
     rescue TypeError
-      default_config
+      # default_config
+      raise InvalidConfig.new("The Ruby configuration is invalid.")
     end
 
     def default_config

@@ -2,6 +2,8 @@
 # Builds style guide based on file extension.
 # Delegates to style guide for line violations.
 class StyleChecker
+  class FailedToReviewStyle < StandardError; end
+
   def initialize(pull_request)
     @pull_request = pull_request
     @style_guides = {}
@@ -19,6 +21,8 @@ class StyleChecker
     files_to_check.flat_map do |file|
       style_guide(file.filename).violations_in_file(file)
     end
+  rescue StyleGuide::InvalidConfig => error
+    raise FailedToReviewStyle.new(error.message)
   end
 
   def files_to_check

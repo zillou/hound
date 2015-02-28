@@ -17,6 +17,13 @@ class BuildRunner
       upsert_owner
       track_subscribed_build_completed
     end
+  rescue FailedToReviewStyle => error
+    # would be great to link to a page explaining what's wrong with the config
+    github.create_error_status(
+      payload.full_repo_name,
+      payload.head_sha,
+      error.message
+    )
   end
 
   private

@@ -1,5 +1,6 @@
-# Base to contain common style guide logic
 module StyleGuide
+  class InvalidConfig < StandardError; end
+
   class Base
     pattr_initialize :repo_config, :repository_owner_name
 
