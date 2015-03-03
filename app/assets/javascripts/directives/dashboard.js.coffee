@@ -1,14 +1,14 @@
-App.directive 'dashboardBar', ['Violation', (Violation) ->
+App.directive 'violationDashboard', ['Violation', (Violation) ->
   scope: {}
   templateUrl: '/templates/dashboard'
 
   link: (scope, element, attributes) ->
+    scope.maxCount = 1020
     loadData = ->
-      console.log Violation.query()
-      data = ["string", 1, "test", 2]
-
-    scope.$watch "count", (newValue, oldValue) =>
-      scope.countVar = 300
+      violations = Violation.query()
+      violations.$promise.then((results) ->
+        scope.violations = results
+      )
 
     loadData()
 ]

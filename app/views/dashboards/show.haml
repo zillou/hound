@@ -1,12 +1,7 @@
-- content_for :body_class, "dashboard"
+- content_for :body_class, 'dashboard'
 %h1 Dashboard
 
 %h2 Most Common Ruby Violations
-.violations-count-table
-  - @violation_counts.each do |violation_count|
-    .violation-name= violation_count[0]
-    .violation-bar{ "dashboard-bar" => ""}
-      %span.violation-count= violation_count[1]
-      %svg.svg-container
+.violations-count-table{'violation-dashboard' => ''}
 
 = render 'preload_template', template: 'dashboard'
