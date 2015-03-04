@@ -4,7 +4,6 @@ App.directive 'dashboardBar', [ ->
   restrict: 'E'
 
   link: (scope, element, attributes) ->
-    console.log element
     scope.maxCount = parseInt(attributes['maxCount'])
     scope.count = parseInt(attributes['count'])
 
