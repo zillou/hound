@@ -1,7 +1,7 @@
 .violation-row{ 'ng-repeat' => 'violation in violations' }
-  .violation-name {{ violation[0] }}
+  .violation-name {{ violation.message }}
   .violation-bar
-    %span.violation-count {{ violation[1] }}
+    %span.violation-count {{ violation.count }}
     %svg.svg-container
-      <dashboard-bar count='{{ violation[1] }}' max-count='{{ maxCount }}'>
+      <dashboard-bar count='{{ violation.count }}' max-count='{{ maxCount }}'>
       </dashboard-bar>

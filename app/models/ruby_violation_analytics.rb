@@ -4,13 +4,17 @@ class RubyViolationAnalytics
   end
 
   def violation_counts
-    violation_counts = messages
+    messages
       .group_by { |message| message }
-      .map do |message, matching_messages|
-        [message, matching_messages.count]
+      .map do |message, message_group|
+        {
+          message: message,
+          count: message_group.count
+        }
       end
-
-    violation_counts.sort_by { |a, b| b }.reverse.take(20)
+      .sort_by { |violation_count| violation_count[:count] }
+      .reverse
+      .take(20)
   end
 
   private
@@ -22,14 +26,5 @@ class RubyViolationAnalytics
         .where("filename ILIKE ?", "%.rb")
       violations.flat_map { |violation| violation.messages }
     end
-  end
-
-  def all_rules
-    RuboCop::Cop::Cop.all.map do |cop|
-      begin
-        cop::MSG
-      rescue NameError
-      end
-    end.compact.uniq
   end
 end
