@@ -12,6 +12,10 @@
   .dot
 
 %ul.repos{'ng-hide' => 'syncingRepos'}
-  %li.repo{'repo' => '', 'ng-repeat' => 'repo in repos | filter:search', 'ng-class' => '{active: repo.active, processing: processing}'}
+  %li.repo{'repo' => '',
+    'ng-repeat' => 'repo in filteredRepos = (repos | filter:search | limitTo:10)',
+    'ng-class' => '{active: repo.active, processing: processing}'}
+  %li.footer
+    Showing {{filteredRepos.length}} of {{repos.length}}
 
 = render 'preload_template', template: 'repo'
