@@ -35,7 +35,9 @@ class CompletedFileReviewJob
     payload = Payload.new(build.payload)
     pull_request = PullRequest.new(payload, ENV.fetch("HOUND_GITHUB_TOKEN"))
 
-    BuildReport.run(pull_request, build)
+    if build.completed?
+      BuildReport.run(pull_request, build)
+    end
   rescue ActiveRecord::RecordNotFound, Resque::TermException
     Resque.enqueue(self, attributes)
   end

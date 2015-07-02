@@ -28,16 +28,36 @@ describe BuildRunner, '#run' do
       expect(build.payload).to eq ({ payload_stuff: "test" }).to_json
     end
 
-    it "runs the BuildReport to finalize the build" do
-      build_runner = make_build_runner
-      stubbed_github_api
-      pull_request = stubbed_pull_request
-      stubbed_style_checker_with_violations
-      allow(BuildReport).to receive(:run)
+    context "when the build is complete" do
+      it "runs the BuildReport to finalize the build" do
+        build_runner = make_build_runner
+        stubbed_github_api
+        pull_request = stubbed_pull_request
+        stubbed_style_checker_with_file_reviews(file_reviews: [
+          build(:file_review, :completed),
+        ])
+        allow(BuildReport).to receive(:run)
 
-      build_runner.run
+        build_runner.run
 
-      expect(BuildReport).to have_received(:run).with(pull_request, Build.last)
+        expect(BuildReport).to have_received(:run).with(pull_request, Build.last)
+      end
+    end
+
+    context "when the build is not complete" do
+      it "does not run the BuildReports to finalise the build" do
+        build_runner = make_build_runner
+        stubbed_github_api
+        pull_request = stubbed_pull_request
+        stubbed_style_checker_with_file_reviews(file_reviews: [
+          build(:file_review),
+        ])
+        allow(BuildReport).to receive(:run)
+
+        build_runner.run
+
+        expect(BuildReport).not_to have_received(:run)
+      end
     end
 
     it 'initializes StyleChecker with modified files and config' do
@@ -260,7 +280,11 @@ describe BuildRunner, '#run' do
 
   def stubbed_style_checker(violations:)
     file_review = build(:file_review, violations: violations)
-    style_checker = double("StyleChecker", file_reviews: [file_review])
+    stubbed_style_checker_with_file_reviews(file_reviews: [file_review])
+  end
+
+  def stubbed_style_checker_with_file_reviews(file_reviews:)
+    style_checker = double("StyleChecker", file_reviews: file_reviews)
     allow(StyleChecker).to receive(:new).and_return(style_checker)
 
     style_checker

@@ -31,7 +31,10 @@ class BuildRunner
     create_pending_status
     upsert_owner
     build = create_build
-    BuildReport.run(pull_request, build)
+
+    if build.completed?
+      BuildReport.run(pull_request, build)
+    end
   end
 
   def relevant_pull_request?

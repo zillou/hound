@@ -15,20 +15,40 @@ describe CompletedFileReviewJob do
       expect(file_review.violations).to be_present
     end
 
-    it "runs Build Report" do
-      file_review = create_file_review
-      build = file_review.build
-      stub_build_report_run
-      pull_request = stub_pull_request
-      payload = stub_payload
+    context "when the build is complete" do
+      it "runs Build Report" do
+        completed_file_review = create_file_review(completed_at: Time.current)
+        build = completed_file_review.build
+        stub_build_report_run
+        pull_request = stub_pull_request
+        payload = stub_payload
 
-      CompletedFileReviewJob.perform(attributes)
+        CompletedFileReviewJob.perform(attributes)
 
-      expect(BuildReport).to have_received(:run).with(pull_request, build)
-      expect(Payload).to have_received(:new).with(build.payload)
-      expect(PullRequest).to(
-        have_received(:new).with(payload, ENV.fetch("HOUND_GITHUB_TOKEN"))
-      )
+        expect(BuildReport).to have_received(:run).with(pull_request, build)
+        expect(Payload).to have_received(:new).with(build.payload)
+        expect(PullRequest).to(
+          have_received(:new).with(payload, ENV.fetch("HOUND_GITHUB_TOKEN"))
+        )
+      end
+    end
+
+    context "when the build is not complete" do
+      it "does not run Build Report" do
+        completed_file_review = create_file_review(completed_at: nil)
+        build = completed_file_review.build
+        _incomplete_file_review = create_file_review(
+          build: build,
+          completed_at: nil,
+        )
+        stub_build_report_run
+        pull_request = stub_pull_request
+        payload = stub_payload
+
+        CompletedFileReviewJob.perform(attributes)
+
+        expect(BuildReport).not_to have_received(:run)
+      end
     end
 
     context "when build doesn't exist" do
@@ -97,13 +117,18 @@ describe CompletedFileReviewJob do
     }
   end
 
-  def create_file_review
+  def create_file_review(attrs = {})
     build = build(
       :build,
       commit_sha: attributes.fetch("commit_sha"),
       pull_request_number: attributes.fetch("pull_request_number")
     )
-    create(:file_review, build: build, filename: attributes.fetch("filename"))
+    default_attrs = {
+      build: build,
+      filename: attributes.fetch("filename"),
+      completed_at: Time.current,
+    }
+    create(:file_review, default_attrs.merge(attrs))
   end
 
   def stub_build_report_run
