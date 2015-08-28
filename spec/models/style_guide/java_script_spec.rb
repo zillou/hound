@@ -15,8 +15,8 @@ describe StyleGuide::JavaScript do
     end
 
     context "with default config" do
-      context "when semicolon is missing" do
-        it "returns a collection of violation objects" do
+      context "without semicolon" do
+        it "finds violation" do
           repo_config = double("RepoConfig", for: {})
           commit_file = build_js_file("var foo = 'bar'")
 
@@ -28,17 +28,14 @@ describe StyleGuide::JavaScript do
           violation = violations.first
           expect(violation.filename).to eq commit_file.filename
           expect(violation.line_number).to eq 1
-          expect(violation.messages).to match_array([
-            "Missing semicolon.",
-            "'foo' is defined but never used.",
-          ])
+          expect(violation.messages).to include "Missing semicolon."
         end
       end
     end
 
-    context "when semicolon check is disabled in config" do
-      context "when semicolon is missing" do
-        it "returns no violation" do
+    context "with custom config" do
+      context "when semicolons are optional" do
+        it "does not find violation" do
           repo_config = double("RepoConfig", for: { "asi" => true })
           commit_file = build_js_file("parseFloat('1')")
 
@@ -47,7 +44,7 @@ describe StyleGuide::JavaScript do
             repo_config: repo_config
           )
 
-          expect(violations).to be_empty
+          expect(violations).not_to include "Missing semicolon."
         end
       end
     end
@@ -64,82 +61,6 @@ describe StyleGuide::JavaScript do
         )
 
         expect(violations).to be_empty
-      end
-    end
-
-    context "when a global variable is ignored" do
-      it "returns no violations" do
-        repo_config = double("RepoConfig", for: { "predef" => ["myGlobal"] })
-        commit_file = build_js_file("$(myGlobal).hide();")
-
-        violations = violations_in(
-          commit_file: commit_file,
-          repo_config: repo_config
-        )
-
-        expect(violations).to be_empty
-      end
-    end
-
-    context "non-thoughtbot pull request" do
-      it "uses the default hound configuration" do
-        spy_on_file_read
-        spy_on_jshintrb
-        configuration_file_path = default_configuration_file(
-          StyleGuide::JavaScript
-        )
-        repo_config = double("RepoConfig", for: {})
-        commit_file = build_js_file("$(myGlobal).hide();")
-
-        violations_in(
-          commit_file: commit_file,
-          repo_config: repo_config,
-          repository_owner_name: "not_thoughtbot"
-        )
-
-        expect(File).to have_received(:read).with(configuration_file_path)
-        expect(Jshintrb).to have_received(:lint).
-          with(anything, default_configuration)
-      end
-    end
-
-    context "thoughtbot pull request" do
-      it "uses the thoughtbot hound configuration" do
-        spy_on_file_read
-        spy_on_jshintrb
-        commit_file = build_js_file("$(myGlobal).hide();")
-        configuration_file_path = thoughtbot_configuration_file(
-          StyleGuide::JavaScript
-        )
-        repo_config = double("RepoConfig", for: {})
-
-        violations_in(
-          commit_file: commit_file,
-          repo_config: repo_config,
-          repository_owner_name: "thoughtbot"
-        )
-
-        expect(File).to have_received(:read).with(configuration_file_path)
-        expect(Jshintrb).to have_received(:lint).
-          with(anything, thoughtbot_configuration)
-      end
-    end
-
-    context "with ES6 support enabled" do
-      it "respects ES6" do
-        repo_config = double("RepoConfig", for: { esnext: true })
-        commit_file = build_js_file("import Ember from 'ember'")
-
-        violations = violations_in(
-          commit_file: commit_file,
-          repo_config: repo_config
-        )
-
-        violation = violations.first
-        expect(violation.messages).to match_array([
-          "Missing semicolon.",
-          "'Ember' is defined but never used.",
-        ])
       end
     end
   end
@@ -206,21 +127,5 @@ describe StyleGuide::JavaScript do
       repository_owner_name
     )
     style_guide.file_review(commit_file).violations
-  end
-
-  def default_configuration
-    config_file_path = default_configuration_file(StyleGuide::JavaScript)
-    config_file = File.read(config_file_path)
-    JSON.parse(config_file)
-  end
-
-  def thoughtbot_configuration
-    config_file_path = thoughtbot_configuration_file(StyleGuide::JavaScript)
-    config_file = File.read(config_file_path)
-    JSON.parse(config_file)
-  end
-
-  def spy_on_jshintrb
-    allow(Jshintrb).to receive(:lint).and_return([])
   end
 end

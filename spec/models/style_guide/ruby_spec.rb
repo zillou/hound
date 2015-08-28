@@ -14,7 +14,7 @@ describe StyleGuide::Ruby do
     end
 
     context "with default configuration" do
-      context "for double quotes" do
+      context "with double quotes" do
         it "finds violation" do
           violation = "Prefer single-quoted strings when you don't need string interpolation or special symbols."
 
