@@ -2,35 +2,26 @@ require "rails_helper"
 
 describe StyleChecker, "#file_reviews" do
   it "returns a collection of file reviews with violations" do
-    stylish_commit_file = stub_commit_file("good.rb", "def good; end")
-    violated_commit_file = stub_commit_file("bad.rb", "def bad( a ); a; end  ")
+    stylish_commit_file = stub_commit_file("good.rb", "'Billy Bob'")
+    violated_commit_file = stub_commit_file("bad.rb", "'Jim Tom'       ")
     pull_request = stub_pull_request(
       commit_files: [stylish_commit_file, violated_commit_file]
     )
-    expected_violations = [
-      "Unnecessary spacing detected.",
-      "Space inside parentheses detected.",
-      "Trailing whitespace detected.",
-    ]
 
     violation_messages = pull_request_violations(pull_request)
 
-    expect(violation_messages).to eq expected_violations
+    expect(violation_messages).to include "Trailing whitespace detected."
   end
 
   context "for a Ruby file" do
     context "with style violations" do
       it "returns violations" do
-        commit_file = stub_commit_file("ruby.rb", "puts 123    ")
+        commit_file = stub_commit_file("ruby.rb", "2 + 2     ")
         pull_request = stub_pull_request(commit_files: [commit_file])
-        expected_violations = [
-          "Unnecessary spacing detected.",
-          "Trailing whitespace detected.",
-        ]
 
         violation_messages = pull_request_violations(pull_request)
 
-        expect(violation_messages).to eq expected_violations
+        expect(violation_messages).to include "Trailing whitespace detected."
       end
     end
 
