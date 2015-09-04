@@ -30,7 +30,7 @@ Here are a few technical guidelines to follow:
 
 1. We need to expose the local app via a publicly-accessible, stable URL so that GitHub can send webhook requests to start a build. Install localtunnel:
 
-    `npm install -g localtunnel
+    `npm install -g localtunnel`
 
 1. Tell localtunnel to expose localhost:5000 with a custom subdomain:
 
@@ -45,9 +45,9 @@ Here are a few technical guidelines to follow:
 
     * Application Name: Hound Development
     * Homepage URL: `https://<your-initials>hound.localtunnel.me`
-      **NOTE:** If you did not set up localtunnel, use `http://localhost:5000`
+      (If you did not set up localtunnel, use `http://localhost:5000`)
     * Authorization Callback URL: `https://<your-initials>hound.localtunnel.me`
-      **NOTE:** If you did not set up localtunnel, use `http://localhost:5000`
+      (If you did not set up localtunnel, use `http://localhost:5000`)
 
 1. If you did not set up localtunnel, skip to the last step now.
 
