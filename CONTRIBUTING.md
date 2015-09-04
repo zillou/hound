@@ -26,7 +26,7 @@ Here are a few technical guidelines to follow:
     `./bin/setup`
 
     **NOTE:** If you don't need Hound to communicate with your local machine, you may skip steps 2-5.
-    Designers, you don't need ngrok for the purpose of making css changes and running the app locally.
+    Designers, you don't need localtunnel for the purpose of making css changes and running the app locally.
 
 1. We need to expose the local app via a publicly-accessible, stable URL so that GitHub can send webhook requests to start a build. Install localtunnel:
 
@@ -63,12 +63,9 @@ Here are a few technical guidelines to follow:
 1. On the confirmation screen, copy the generated token to `HOUND_GITHUB_TOKEN`
    in the `.env.local` file. Also update `HOUND_GITHUB_USERNAME` to be your username.
 
-1. Run `foreman start`. Foreman will start the web server and
-   the resque background job queue. NOTE: `rails server` will not load the
-   appropriate environment variables and you'll get a "Missing `secret_key_base`
-   for 'development' environment" error.
+1. Run `foreman start` (not `rails server`). Foreman will start the web server and
+   the resque background job queue.
 
-[ngrok]: https://ngrok.com
 [new-application]: https://github.com/settings/applications/new
 [application settings]: https://github.com/settings/applications
 
