@@ -25,39 +25,34 @@ Here are a few technical guidelines to follow:
 
     `./bin/setup`
 
-    **NOTE:** If you don't need Hound to communicate with your local machine, you may skip steps 2-5.  
+    **NOTE:** If you don't need Hound to communicate with your local machine, you may skip steps 2-5.
     Designers, you don't need ngrok for the purpose of making css changes and running the app locally.
 
-1. Ngrok allows GitHub to make requests via webhook to start a build. Sign up
-for a free [ngrok] account and create a `~/.ngrok` file with the following:
+1. We need to expose the local app via a publicly-accessible, stable URL so that GitHub can send webhook requests to start a build. Install localtunnel:
 
-    `auth_token: <your-token>`
+    `npm install -g localtunnel
 
-1. Launch ngrok with a custom subdomain on port 5000.
+1. Tell localtunnel to expose localhost:5000 with a custom subdomain:
 
-    `ngrok -subdomain=<your-initials>-hound 5000`
+    `localtunnel --port 5000 --subdomain <your-initials>hound`
 
-1. Set the `HOST` variable in your `.env` to your ngrok host, e.g.
-   `<your-initials>.ngrok.com`.
+1. Set the `HOST` variable in your `.env.local` to your localtunnel host, e.g.
+   `https://<your-initials>hound.localtunnel.me`.
 
-1. Change `ENABLE_HTTPS` to 'yes' in the .env file.
+1. Add `ENABLE_HTTPS=yes` to the `.env.local` file.
 
-1. Log into your GitHub account and go to your
-   [application settings].
-
-1. Under the Developer applications panel - Click on "Register new
-   application" and fill in the details:
+1. [Register a new GitHub application][new-application]:
 
     * Application Name: Hound Development
-    * Homepage URL: `https://<your-initials>-hound.ngrok.com`  
-      **NOTE:** If you did not set up ngrok, use `http://localhost:5000`
-    * Authorization Callback URL: `http://<your-initials>-hound.ngrok.com`  
-      **NOTE:** If you did not set up ngrok, use `http://localhost:5000`
+    * Homepage URL: `https://<your-initials>hound.localtunnel.me`
+      **NOTE:** If you did not set up localtunnel, use `http://localhost:5000`
+    * Authorization Callback URL: `https://<your-initials>hound.localtunnel.me`
+      **NOTE:** If you did not set up localtunnel, use `http://localhost:5000`
 
-      **NOTE:** If you did not set up ngrok, skip to the last step.
+1. If you did not set up localtunnel, skip to the last step now.
 
-1. On the confirmation screen, copy the `Client ID` and `Client Secret` to
-   `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in the `.env` file.
+1. On the confirmation screen, copy the `Client ID` as `GITHUB_CLIENT_ID` and
+   the `Client Secret` as `GITHUB_CLIENT_SECRET` in the `.env.local` file.
 
 1. Back on the [application settings] page, click "Generate new token" and fill
    in token details:
@@ -66,7 +61,7 @@ for a free [ngrok] account and create a `~/.ngrok` file with the following:
     * Select scopes: `repo` and `user:email`
 
 1. On the confirmation screen, copy the generated token to `HOUND_GITHUB_TOKEN`
-   in the `.env` file. Also update `HOUND_GITHUB_USERNAME` to be your username.
+   in the `.env.local` file. Also update `HOUND_GITHUB_USERNAME` to be your username.
 
 1. Run `foreman start`. Foreman will start the web server and
    the resque background job queue. NOTE: `rails server` will not load the
@@ -74,6 +69,7 @@ for a free [ngrok] account and create a `~/.ngrok` file with the following:
    for 'development' environment" error.
 
 [ngrok]: https://ngrok.com
+[new-application]: https://github.com/settings/applications/new
 [application settings]: https://github.com/settings/applications
 
 ## Testing
