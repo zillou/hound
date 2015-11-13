@@ -1,18 +1,14 @@
 class HoundConfig
   CONFIG_FILE = ".hound.yml"
-  BETA_LANGUAGES = %w(
-    eslint
-    jscs
-    jshint
-    mdast
-    python
-    swift
-  )
   LANGUAGES = %w(
     coffeescript
+    eslint
     go
     haml
     javascript
+    jscs
+    jshint
+    mdast
     python
     ruby
     scss
@@ -47,7 +43,7 @@ class HoundConfig
   end
 
   def enabled?(config)
-    config["enabled"] || config["Enabled"]
+    config["enabled"] || config["Enabled"] || config["config_file"]
   end
 
   def options_for(name)
@@ -56,11 +52,7 @@ class HoundConfig
   end
 
   def default_options_for(name)
-    { "enabled" => !beta?(name) }
-  end
-
-  def beta?(name)
-    BETA_LANGUAGES.include?(name)
+    { "enabled" => false }
   end
 
   def normalize_key(key)
