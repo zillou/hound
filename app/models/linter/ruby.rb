@@ -1,7 +1,5 @@
-# Determine Ruby style guide violations per-line.
 module Linter
   class Ruby < Base
-    DEFAULT_CONFIG_FILENAME = "ruby.yml"
     FILE_REGEXP = /.+\.rb\z/
 
     def file_review(commit_file)
@@ -9,7 +7,7 @@ module Linter
     end
 
     def file_included?(commit_file)
-      !linter_config.file_to_exclude?(commit_file.filename)
+      !merged_config.file_to_exclude?(commit_file.filename)
     end
 
     private
@@ -27,11 +25,7 @@ module Linter
     end
 
     def team
-      RuboCop::Cop::Team.new(
-        RuboCop::Cop::Cop.all,
-        linter_config,
-        rubocop_options,
-      )
+      RuboCop::Cop::Team.new(RuboCop::Cop::Cop.all, merged_config)
     end
 
     def parsed_source(commit_file)
@@ -39,18 +33,11 @@ module Linter
       RuboCop::ProcessedSource.new(commit_file.content, absolute_filepath)
     end
 
-    def linter_config
-      @linter_config ||= RuboCop::Config.new(merged_config, "")
-    end
-
     def merged_config
-      RuboCop::ConfigLoader.merge(default_config, custom_config)
-    rescue TypeError
-      default_config
-    end
-
-    def default_config
-      RuboCop::ConfigLoader.configuration_from_file(default_config_file)
+      @merged_config ||= RuboCop::ConfigLoader.merge_with_default(
+        custom_config.to_hash,
+        ""
+      )
     end
 
     def custom_config
@@ -58,24 +45,8 @@ module Linter
         custom_config.add_missing_namespaces
         custom_config.make_excludes_absolute
       end
-    rescue NoMethodError
+    rescue
       RuboCop::Config.new
-    end
-
-    # This is deprecated in favor of RuboCop's DisplayCopNames option.
-    # Let's track how often we see this and remove it if we see fit.
-    def rubocop_options
-      if linter_config.delete("ShowCopNames")
-        Analytics.new(repository_owner_name).track_show_cop_names
-        { debug: true }
-      end
-    end
-
-    def default_config_file
-      DefaultConfigFile.new(
-        DEFAULT_CONFIG_FILENAME,
-        repository_owner_name
-      ).path
     end
   end
 end
