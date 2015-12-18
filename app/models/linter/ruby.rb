@@ -44,26 +44,7 @@ module Linter
     end
 
     def linter_config
-      @linter_config ||= RuboCop::Config.new(merged_config, "")
-    end
-
-    def merged_config
-      RuboCop::ConfigLoader.merge(default_config, custom_config)
-    rescue TypeError
-      default_config
-    end
-
-    def default_config
-      RuboCop::ConfigLoader.configuration_from_file(default_config_file)
-    end
-
-    def custom_config
-      RuboCop::Config.new(config.content, "").tap do |custom_config|
-        custom_config.add_missing_namespaces
-        custom_config.make_excludes_absolute
-      end
-    rescue NoMethodError
-      RuboCop::Config.new
+      @linter_config ||= RubyConfigBuilder.new(config.content, repository_owner_name).config
     end
 
     # This is deprecated in favor of RuboCop's DisplayCopNames option.
@@ -73,13 +54,6 @@ module Linter
         Analytics.new(repository_owner_name).track_show_cop_names
         { debug: true }
       end
-    end
-
-    def default_config_file
-      DefaultConfigFile.new(
-        DEFAULT_CONFIG_FILENAME,
-        repository_owner_name
-      ).path
     end
   end
 end
