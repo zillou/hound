@@ -1,6 +1,4 @@
 class LinterConfigsController < ApplicationController
-  layout false
-
   def show
     case params[:linter]
     when "ruby"
