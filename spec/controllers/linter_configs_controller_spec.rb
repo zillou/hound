@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe LinterConfigsController do
   context "requesting ruby" do
-    it "returns the merged RuboCop config", aggregate_failures: true do
+    it "returns the merged RuboCop config" do
       user = create(:user)
       stub_sign_in(user)
       our_config = {
@@ -16,18 +16,18 @@ describe LinterConfigsController do
           config_file: ruby.yml
       HOUND
       stub_repo_request("thoughtbot/hound", user.token)
-      stub_contents_request(
+      stub_encoded_contents_request(
         sha: "master",
         repo_name: "thoughtbot/hound",
         file: ".hound.yml",
-        body: { content: Base64.encode64(hound_yaml) }.to_json,
+        body: hound_yaml,
         token: user.token,
       )
-      stub_contents_request(
+      stub_encoded_contents_request(
         sha: "master",
         repo_name: "thoughtbot/hound",
         file: "ruby.yml",
-        body: { content: Base64.encode64(YAML.dump(our_config)) }.to_json,
+        body: YAML.dump(our_config),
         token: user.token,
       )
 
@@ -66,4 +66,24 @@ describe LinterConfigsController do
       expect(response).to redirect_to(root_url)
     end
   end
+
+  def stub_encoded_contents_request(options = {})
+    repo_name = options.fetch(:repo_name)
+    file = options.fetch(:file)
+    sha = options.fetch(:sha)
+    token = options.fetch(:token)
+    content = Base64.encode64(options.fetch(:body))
+
+    stub_request(
+      :get,
+      "https://api.github.com/repos/#{repo_name}/contents/#{file}?ref=#{sha}"
+    ).with(
+      headers: { "Authorization" => "token #{token}" }
+    ).to_return(
+      status: 200,
+      body: { content: content }.to_json,
+      headers: { 'Content-Type' => 'application/json; charset=utf-8' }
+    )
+  end
+
 end
