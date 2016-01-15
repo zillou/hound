@@ -31,6 +31,8 @@ Houndapp::Application.routes.draw do
     end
   end
 
+  resources :owners, only: [:show, :update]
+
   with_options(defaults: { format: :json }) do
     resource :credit_card, only: [:update]
     resources :repo_syncs, only: [:index, :create]

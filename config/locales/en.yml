@@ -1,4 +1,13 @@
 en:
+  helpers:
+    submit:
+      owner:
+        update: Save
+
+    label:
+      owner:
+        config_repo: Github repository name that contains your main .hound.yml
+
   sync_repos: "Refresh repo list"
   include_private_repos: "Include private repos"
   syncing_repos: "Loading..."

@@ -8,4 +8,8 @@ class Owner < ActiveRecord::Base
     owner.save!
     owner
   end
+
+  def to_param
+    name
+  end
 end

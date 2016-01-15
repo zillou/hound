@@ -7,6 +7,7 @@ class RepoSerializer < ActiveModel::Serializer
     :github_id,
     :id,
     :in_organization,
+    :owner_name,
     :price_in_cents,
     :private,
     :stripe_subscription_id,
@@ -22,5 +23,9 @@ class RepoSerializer < ActiveModel::Serializer
 
   def admin
     object.memberships.find_by(user_id: current_user.id).admin?
+  end
+
+  def owner_name
+    object.owner.name
   end
 end

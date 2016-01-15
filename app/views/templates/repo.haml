@@ -1,5 +1,7 @@
 .repo-name
   %span {{ repo.full_github_name }}
+.settings
+  %a{ "ng-href": "/owners/{{ repo.owner_name }}" } Edit
 .activation-toggle{ "ng-class": "{private: repo.private}" }
   %span.private-label Private - $12
   %button.toggle{ "ng-click": "toggle()",
