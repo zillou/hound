@@ -5,8 +5,11 @@ require "app/models/config/go"
 describe Config::Go do
   describe "#content" do
     it "returns an empty string" do
-      hound_config = double("HoundConfig")
-      config = Config::Go.new(hound_config, "go")
+      config = Config::Go.new(
+        repo: double("Repo"),
+        hound_config: double("HoundConfig"),
+        linter_name: "go",
+      )
 
       expect(config.content).to eq ""
     end

@@ -29,7 +29,11 @@ describe Config::Python do
           commit: double("Commit"),
           content: {},
         )
-        config = Config::Python.new(hound_config, "unconfigured_linter")
+        config = Config::Python.new(
+          repo: double("Repo"),
+          hound_config: hound_config,
+          linter_name: "unconfigured_linter",
+        )
 
         expect(config.content).to eq ""
       end

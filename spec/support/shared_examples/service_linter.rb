@@ -13,7 +13,11 @@ shared_examples "a service based linter" do
         commit: commit,
         content: hound_config_content,
       )
-      config = described_class.new(hound_config, linter_name)
+      config = described_class.new(
+        repo: double("Repo"),
+        hound_config: hound_config,
+        linter_name: linter_name,
+      )
 
       expect(config.content).to eq(raw_config)
     end

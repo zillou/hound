@@ -56,7 +56,11 @@ describe Config::Jshint do
   end
 
   def build_config(commit)
-    Config::Jshint.new(stubbed_hound_config(commit), "jshint")
+    Config::Jshint.new(
+      repo: double("Repo"),
+      hound_config: stubbed_hound_config(commit),
+      linter_name: "jshint",
+    )
   end
 
   def stubbed_hound_config(commit)

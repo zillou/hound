@@ -69,6 +69,11 @@ describe Config::Haml do
         },
       },
     )
-    Config::Haml.new(hound_config, "haml")
+
+    Config::Haml.new(
+      repo: double("Repo"),
+      hound_config: hound_config,
+      linter_name: "haml",
+    )
   end
 end

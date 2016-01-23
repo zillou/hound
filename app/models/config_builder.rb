@@ -1,23 +1,28 @@
 class ConfigBuilder
-  def self.for(hound_config, name)
-    new(hound_config, name).config
+  def self.for(**args)
+    new(**args).config
   end
 
-  def initialize(hound_config, name)
+  def initialize(hound_config:, repo:, linter_name:)
     @hound_config = hound_config
-    @name = name
+    @repo = repo
+    @linter_name = linter_name
   end
 
   def config
-    config_class.new(hound_config, name)
+    config_class.new(
+      repo: repo,
+      hound_config: hound_config,
+      linter_name: linter_name,
+    )
   end
 
   private
 
-  attr_reader :hound_config, :name
+  attr_reader :hound_config, :repo, :linter_name
 
   def config_class
-    "Config::#{name.classify}".constantize
+    "Config::#{linter_name.classify}".constantize
   rescue
     Config::Unsupported
   end

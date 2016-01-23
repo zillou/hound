@@ -76,6 +76,10 @@ describe Config::CoffeeScript do
         },
       },
     )
-    Config::CoffeeScript.new(hound_config, "coffee_script")
+    Config::CoffeeScript.new(
+      repo: double("Repo"),
+      hound_config: hound_config,
+      linter_name: "coffee_script",
+    )
   end
 end

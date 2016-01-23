@@ -12,7 +12,12 @@ describe Config::Ruby do
           "HoundConfig",
           content: { "LineLength" => { "Max" => 90 } },
         )
-        config = Config::Ruby.new(hound_config, "ruby")
+        repo = double("Repo")
+        config = Config::Ruby.new(
+          repo: repo,
+          hound_config: hound_config,
+          linter_name: "ruby",
+        )
 
         expect(config.content).to eq("LineLength" => { "Max" => 90 })
       end
@@ -149,6 +154,11 @@ describe Config::Ruby do
         },
       },
     )
-    Config::Ruby.new(hound_config, "ruby")
+
+    Config::Ruby.new(
+      repo: double("Repo"),
+      hound_config: hound_config,
+      linter_name: "ruby",
+    )
   end
 end

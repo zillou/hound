@@ -95,6 +95,7 @@ describe Config::Base do
 
     context "when `parse` is not defined" do
       it "raises an exception" do
+        repo = double("Repo")
         hound_config = double(
           "HoundConfig",
           commit: double("Commit", file_content: ""),
@@ -102,7 +103,11 @@ describe Config::Base do
             "linter" => { "config_file" => "config-file.txt" },
           },
         )
-        config = Config::Base.new(hound_config, "linter")
+        config = Config::Base.new(
+          repo: repo,
+          hound_config: hound_config,
+          linter_name: "linter",
+        )
 
         expect { config.content }.to raise_error(
           AttrExtras::MethodNotImplementedError,
@@ -128,8 +133,13 @@ describe Config::Base do
     end
   end
 
-  def build_config(hound_config: build_hound_config, linter_name: "test")
-    Config::Test.new(hound_config, linter_name)
+  def build_config(options = {})
+    default_options = {
+      hound_config: build_hound_config,
+      repo: double("Repo"),
+      linter_name: "test",
+    }
+    Config::Test.new(default_options.merge(options))
   end
 
   def build_hound_config
