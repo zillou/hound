@@ -1,5 +1,7 @@
 module Config
   class Base
+    attr_reader :hound_config
+
     def initialize(repo:, hound_config:, linter_name:)
       @repo = repo
       @hound_config = hound_config
@@ -22,7 +24,7 @@ module Config
 
     private
 
-    attr_reader :repo, :hound_config, :linter_name
+    attr_reader :repo, :linter_name
 
     attr_implement :parse, [:file_content]
 

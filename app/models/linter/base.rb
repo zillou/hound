@@ -66,5 +66,13 @@ module Linter
         linter_name: name,
       )
     end
+
+    def master_config
+      @master_config ||= MasterConfigBuilder.for(
+        repo: build.repo,
+        hound_config: hound_config,
+        linter_name: name,
+      )
+    end
   end
 end

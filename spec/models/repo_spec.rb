@@ -14,6 +14,35 @@ describe Repo do
     expect(subject).to validate_uniqueness_of(:github_id)
   end
 
+  describe "#master_config_enabled?" do
+    context "when the repo has enabled the master config" do
+      it "returns true" do
+        owner = build(:owner, master_config: "thoughtbot/hound")
+        repo = build(:repo, owner: owner, master_config_enabled: true)
+
+        expect(repo.master_config_enabled?).to eq true
+      end
+    end
+
+    context "when the repo has disabled the master config" do
+      it "returns false" do
+        owner = build(:owner, master_config: "thoughtbot/hound")
+        repo = build(:repo, owner: owner, master_config_enabled: false)
+
+        expect(repo.master_config_enabled?).to eq false
+      end
+    end
+
+    context "when the repo has no master config" do
+      it "returns false" do
+        owner = build(:owner, master_config: "")
+        repo = build(:repo, owner: owner, master_config_enabled: true)
+
+        expect(repo.master_config_enabled?).to eq false
+      end
+    end
+  end
+
   describe "#bulk?" do
     context "when repo is bulk" do
       it "returns true" do

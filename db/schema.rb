@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151216235118) do
+ActiveRecord::Schema.define(version: 20160201160245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,26 +68,28 @@ ActiveRecord::Schema.define(version: 20151216235118) do
   add_index "memberships", ["user_id", "repo_id"], name: "index_memberships_on_user_id_and_repo_id", unique: true, using: :btree
 
   create_table "owners", force: :cascade do |t|
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.integer  "github_id",                    null: false
-    t.string   "name",                         null: false
-    t.boolean  "organization", default: false, null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "github_id",                     null: false
+    t.string   "name",                          null: false
+    t.boolean  "organization",  default: false, null: false
+    t.text     "master_config", default: "",    null: false
   end
 
   add_index "owners", ["github_id"], name: "index_owners_on_github_id", unique: true, using: :btree
   add_index "owners", ["name"], name: "index_owners_on_name", unique: true, using: :btree
 
   create_table "repos", force: :cascade do |t|
-    t.integer  "github_id",                                    null: false
-    t.boolean  "active",                       default: false, null: false
+    t.integer  "github_id",                                         null: false
+    t.boolean  "active",                            default: false, null: false
     t.integer  "hook_id"
-    t.string   "full_github_name", limit: 255,                 null: false
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
+    t.string   "full_github_name",      limit: 255,                 null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
     t.boolean  "private"
     t.boolean  "in_organization"
     t.integer  "owner_id"
+    t.boolean  "master_config_enabled",             default: false, null: false
   end
 
   add_index "repos", ["active"], name: "index_repos_on_active", using: :btree
