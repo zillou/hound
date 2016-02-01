@@ -1,22 +1,34 @@
 require "spec_helper"
 require "app/models/config/base"
 require "app/models/config/jscs"
+require "app/models/config/parser"
 
 describe Config::Jscs do
-  it_behaves_like "a service based linter" do
-    let(:raw_config) do
-      <<-EOS.strip_heredoc
+  describe "#content" do
+    it "parses the configuration using YAML" do
+      raw_config = <<-EOS.strip_heredoc
         { "disallowKeywordsInComments": true }
       EOS
-    end
+      commit = stubbed_commit("config/.jscsrc" => raw_config)
+      config = build_config(commit)
 
-    let(:hound_config_content) do
-      {
-        "jscs" => {
-          "enabled" => true,
-          "config_file" => "config/.jscsrc",
-        },
-      }
+      expect(config.content).to eq Config::Parser.yaml(raw_config)
     end
+  end
+
+  def build_config(commit)
+    hound_config = double(
+      "HoundConfig",
+      commit: commit,
+      content: {
+        "jscs" => { "enabled": true, "config_file" => "config/.jscsrc" },
+      },
+    )
+
+    Config::Jscs.new(
+      hound_config: hound_config,
+      repo: double("Repo"),
+      linter_name: "jscs",
+    )
   end
 end

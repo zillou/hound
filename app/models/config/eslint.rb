@@ -1,9 +1,15 @@
 module Config
   class Eslint < Base
+    DEFAULT_CONTENT = {}
+
+    def content
+      super || DEFAULT_CONTENT
+    end
+
     private
 
     def parse(file_content)
-      Parser.raw(file_content)
+      Config::Parser.yaml(file_content)
     end
   end
 end

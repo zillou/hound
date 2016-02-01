@@ -33,7 +33,7 @@ describe Linter::Scss do
     it "schedules a review job" do
       build = build(:build, commit_sha: "foo", pull_request_number: 123)
       linter = build_linter(build)
-      stub_scss_config("config")
+      stub_scss_config({})
       commit_file = build_commit_file(filename: "lib/a.scss")
       allow(Resque).to receive(:enqueue)
 
@@ -46,12 +46,12 @@ describe Linter::Scss do
         pull_request_number: build.pull_request_number,
         patch: commit_file.patch,
         content: commit_file.content,
-        config: "config"
+        config: {},
       )
     end
   end
 
-  def stub_scss_config(config = "config")
+  def stub_scss_config(config = {})
     stubbed_scss_config = double("ScssConfig", content: config)
     allow(Config::Scss).to receive(:new).and_return(stubbed_scss_config)
 

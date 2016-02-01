@@ -38,7 +38,11 @@ module Linter
     end
 
     def linter_config
-      default_config.merge(config.content)
+      default_config.merge(merged_config)
+    end
+
+    def merged_config
+      master_config.content.merge(config.content)
     end
 
     def default_config

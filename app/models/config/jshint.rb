@@ -19,7 +19,7 @@ module Config
     private
 
     def parse(file_content)
-      Parser.raw(file_content)
+      Config::Parser.json(file_content)
     end
 
     def load_javascript_ignore

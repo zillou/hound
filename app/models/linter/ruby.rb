@@ -51,7 +51,11 @@ module Linter
     end
 
     def config_builder
-      RubyConfigBuilder.new(config.content, repository_owner_name)
+      RubyConfigBuilder.new(merged_config, repository_owner_name)
+    end
+
+    def merged_config
+      master_config.content.merge(config.content)
     end
 
     # This is deprecated in favor of RuboCop's DisplayCopNames option.

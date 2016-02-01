@@ -1,6 +1,7 @@
 require "spec_helper"
 require "app/models/config/base"
 require "app/models/config/haml"
+require "app/models/config/parser"
 require "app/models/config/parser_error"
 
 describe Config::Haml do

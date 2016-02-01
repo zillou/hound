@@ -55,7 +55,11 @@ module Linter
     end
 
     def custom_config
-      HamlLint::Configuration.new(config.content)
+      HamlLint::Configuration.new(merged_config)
+    end
+
+    def merged_config
+      master_config.content.merge(config.content)
     end
 
     def default_config

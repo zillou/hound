@@ -48,7 +48,7 @@ describe Linter::Jscs do
 
     it "schedules a review job" do
       build = build(:build, commit_sha: "foo", pull_request_number: 123)
-      stub_jscs_config(content: "config")
+      stub_jscs_config(content: {})
       commit_file = build_commit_file(filename: "lib/a.js")
       allow(Resque).to receive(:enqueue)
       linter = build_linter(build)
@@ -62,12 +62,12 @@ describe Linter::Jscs do
         pull_request_number: build.pull_request_number,
         patch: commit_file.patch,
         content: commit_file.content,
-        config: "config",
+        config: {},
       )
     end
   end
 
-  def stub_jscs_config(content: "")
+  def stub_jscs_config(content: {})
     stubbed_jscs_config = double("JscsConfig", content: content)
     allow(Config::Jscs).to receive(:new).and_return(stubbed_jscs_config)
 
