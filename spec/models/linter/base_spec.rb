@@ -23,11 +23,7 @@ describe Linter::Base do
 
   describe "#file_included?" do
     it "returns true" do
-      linter = Linter::Test.new(
-        hound_config: double,
-        build: double,
-        repository_owner_name: "foo",
-      )
+      linter = build_linter
 
       expect(linter.file_included?(double)).to eq true
     end
@@ -36,11 +32,8 @@ describe Linter::Base do
   describe "#enabled?" do
     context "when the hound config is enabled for the given language" do
       it "returns true" do
-        linter = Linter::Test.new(
-          hound_config: double("HoundConfig", enabled_for?: true),
-          build: double("Build", repo: double("Repo")),
-          repository_owner_name: "foo",
-        )
+        hound_config = double("HoundConfig", enabled_for?: true)
+        linter = build_linter(hound_config: hound_config)
 
         expect(linter.enabled?).to eq true
       end
@@ -48,26 +41,21 @@ describe Linter::Base do
 
     context "when the hound config is disabled for the given language" do
       it "returns false" do
-        linter = Linter::Test.new(
-          hound_config: double("HoundConfig", enabled_for?: false),
-          build: double("Build", repo: double("Repo")),
-          repository_owner_name: "foo",
-        )
+        hound_config = double("HoundConfig", enabled_for?: false)
+        linter = build_linter(hound_config: hound_config)
 
         expect(linter.enabled?).to eq false
       end
     end
+  end
 
-    context "when the hound config is disabled for the given language" do
-      it "returns false" do
-        linter = Linter::Test.new(
-          hound_config: double("HoundConfig", enabled_for?: false),
-          build: double("Build", repo: double("Repo")),
-          repository_owner_name: "foo",
-        )
+  def build_linter(options = {})
+    default_options = {
+      hound_config: double("HoundConfig", enabled_for?: false),
+      build: double("Build", repo: double("Repo")),
+      repository_owner_name: "foo",
+    }
 
-        expect(linter.enabled?).to eq false
-      end
-    end
+    Linter::Test.new(default_options.merge(options))
   end
 end
