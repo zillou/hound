@@ -23,7 +23,7 @@ module Linter
     end
 
     def enabled?
-      LinterEnabledChecker.for(config)
+      LinterEnabledChecker.for(config, master_config)
     end
 
     def file_included?(*)

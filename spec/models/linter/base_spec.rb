@@ -34,6 +34,7 @@ describe Linter::Base do
       it "returns true" do
         hound_config = double("HoundConfig", enabled_for?: true)
         linter = build_linter(hound_config: hound_config)
+        stubbed_master_config(hound_config: hound_config)
 
         expect(linter.enabled?).to eq true
       end
@@ -43,8 +44,21 @@ describe Linter::Base do
       it "returns false" do
         hound_config = double("HoundConfig", enabled_for?: false)
         linter = build_linter(hound_config: hound_config)
+        stubbed_master_config(hound_config: hound_config)
 
         expect(linter.enabled?).to eq false
+      end
+
+      context "when the master config is enabled for the given language" do
+        it "returns true" do
+          hound_config = double("HoundConfig", enabled_for?: false)
+          stubbed_master_config(
+            hound_config: double("HoundConfig", enabled_for?: true),
+          )
+          linter = build_linter(hound_config: hound_config)
+
+          expect(linter.enabled?).to eq true
+        end
       end
     end
   end
@@ -57,5 +71,16 @@ describe Linter::Base do
     }
 
     Linter::Test.new(default_options.merge(options))
+  end
+
+  def stubbed_master_config(options = {})
+    default_options = {
+      hound_config: double("HoundConfig", enabled_for?: false),
+      linter_names: [],
+    }
+    master_config = double("MasterConfig", default_options.merge(options))
+    allow(MasterConfigBuilder).to receive(:for).and_return(master_config)
+
+    master_config
   end
 end
