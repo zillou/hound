@@ -5,6 +5,5 @@
 - if display_onboarding?
   = render 'onboarding'
 
-.dashboard
-  %section.repo-listing{ 'repo-list' => '' }
-  = render 'preload_template', template: 'repo_list'
+%section.repo-listing{ 'repo-list' => '' }
+= render 'preload_template', template: 'repo_list'

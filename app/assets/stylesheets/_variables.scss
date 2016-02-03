@@ -32,3 +32,5 @@ $icon-lock: '\f023';
 $small-screen: new-breakpoint(max-width em(540) 2);
 $medium-screen: new-breakpoint(max-width em(760) 4);
 $large-screen: new-breakpoint(max-width em(920) 8);
+
+$base-border-radius: 5px;
