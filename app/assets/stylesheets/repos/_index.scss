@@ -1,30 +1,20 @@
-.organization {
-  border: 1px solid $base-border-color;
-  border-radius: 5px;
-  padding: 2em;
-  width: 100%;
-
-  @include media($large-screen) {
-    padding: 1em;
-  }
-}
-
 .repo {
   @include clearfix;
+  border-top: 1px solid $base-border-color;
   display: table;
   height: 80px;
-  padding: 0;
+  padding: 2em;
   position: relative;
   width: 100%;
-
-  &:not(:first-child) {
-    border-top: 1px solid $base-border-color;
-  }
 
   @include media($small-screen) {
     display: block;
     height: auto;
     padding: 1em 0;
+  }
+
+  @include media($large-screen) {
+    padding: 1em;
   }
 }
 
@@ -67,9 +57,7 @@
   font-size: 1.5em;
   font-weight: 300;
   height: 100%;
-  overflow: hidden;
   position: relative;
-  text-overflow: ellipsis;
   vertical-align: middle;
 
   @include media($small-screen) {
@@ -81,6 +69,7 @@
   }
 
   span {
+    @include ellipsis;
     display: inline-block;
     padding-bottom: 2px;
   }
@@ -126,7 +115,7 @@
     margin: 0.1em 0 0 0.6em;
   }
 
-  i.fa {
+  .fa {
     color: $gold;
     display: inline-block;
     margin-right: 0.2em;
