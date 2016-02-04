@@ -1,0 +1,30 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <ellipse id="a" cx="50" cy="50" rx="50" ry="50"/>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="c">
+            <stop stop-color="#FBAE3D" offset="0%"/>
+            <stop stop-color="#FF291A" offset="100%"/>
+        </linearGradient>
+        <rect id="d" y="1" width="100" height="100" rx="60"/>
+        <radialGradient cx="33.884%" cy="32.273%" fx="33.884%" fy="32.273%" r="65.279%" id="e">
+            <stop stop-color="#FBA73E" offset="0%"/>
+            <stop stop-color="#E97532" offset="44.405%"/>
+            <stop stop-color="#A23314" offset="100%"/>
+        </radialGradient>
+    </defs>
+    <g fill="none">
+        <mask id="b">
+            <use xlink:href="#a"/>
+        </mask>
+        <use xlink:href="#a"/>
+        <g mask="url(#b)">
+            <rect fill="url(#c)" width="100" height="100" rx="60"/>
+            <mask id="f">
+                <use xlink:href="#d"/>
+            </mask>
+            <use xlink:href="#d" fill="none"/>
+            <path d="M-29.23 19.437l41.2-48.915 44.906 43.976S86.638 31.866 79.39 61.64c0 0-1.38 7.943-5.19 13.3-6.535.686-11.467 6.31-22.76 6.31-11.295 0-27.433-3.432-40.93-23.713l-39.74-38.1z" opacity=".339" fill="url(#e)" mask="url(#f)"/>
+            <path d="M56.8 14.648S86.56 32.016 79.313 61.79c0 0 9.028 11.596 5.285 20.016 0 0-3.566-7.274-10.476-6.717-6.535.686-11.468 6.31-22.76 6.31-11.295 0-27.434-3.432-40.932-23.713 0 0 21.96 17.114 42.417 4.923 0 0-14.442-9.862-35.152-37.922 0 0 24.75 20.55 30.236 22.563 0 0-15.74-16.238-21.146-26.427 0 0 21.128 20.336 36.678 29.487 0 0 6.877-16.134-6.667-35.662z" fill="#fff"/>
+        </g>
+    </g>
+</svg>
