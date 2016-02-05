@@ -7,7 +7,7 @@ describe MasterConfigBuilder do
         stub_const("Hound::GITHUB_TOKEN", "sekkrit")
         repo = double(
           "Repo",
-          master_config_enabled?: true,
+          has_master_config?: true,
           master_config: "thoughtbot/hound-legacy-config",
         )
         hound_config = double("HoundConfig")
@@ -28,7 +28,7 @@ describe MasterConfigBuilder do
         stub_const("Hound::GITHUB_TOKEN", "sekkrit")
         repo = double(
           "Repo",
-          master_config_enabled?: false,
+          has_master_config?: false,
           name: "thoughtbot/hound",
           master_config: "thoughtbot/hound-legacy-config",
         )

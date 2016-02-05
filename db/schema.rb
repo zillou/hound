@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160205145101) do
+ActiveRecord::Schema.define(version: 20160205151505) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,16 +81,15 @@ ActiveRecord::Schema.define(version: 20160205145101) do
   add_index "owners", ["name"], name: "index_owners_on_name", unique: true, using: :btree
 
   create_table "repos", force: :cascade do |t|
-    t.integer  "github_id",                                         null: false
-    t.boolean  "active",                            default: false, null: false
+    t.integer  "github_id",                                    null: false
+    t.boolean  "active",                       default: false, null: false
     t.integer  "hook_id"
-    t.string   "full_github_name",      limit: 255,                 null: false
-    t.datetime "created_at",                                        null: false
-    t.datetime "updated_at",                                        null: false
+    t.string   "full_github_name", limit: 255,                 null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
     t.boolean  "private"
     t.boolean  "in_organization"
     t.integer  "owner_id"
-    t.boolean  "master_config_enabled",             default: false, null: false
   end
 
   add_index "repos", ["active"], name: "index_repos_on_active", using: :btree

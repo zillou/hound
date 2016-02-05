@@ -3,7 +3,7 @@ module MasterConfigBuilder
 
   def self.for(repo:, hound_config:, linter_name:)
     hound_config =
-      if repo.master_config_enabled?
+      if repo.has_master_config?
         github = GithubApi.new(Hound::GITHUB_TOKEN)
         commit = Commit.new(repo.master_config, HEAD, github)
         HoundConfig.new(commit)

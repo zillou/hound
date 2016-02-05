@@ -9,7 +9,7 @@ class Repo < ActiveRecord::Base
 
   delegate :type, :price, to: :plan, prefix: true
   delegate :price, to: :subscription, prefix: true
-  delegate :master_config, to: :owner
+  delegate :master_config, :has_master_config?, to: :owner
 
   validates :full_github_name, uniqueness: true, presence: true
   validates :github_id, uniqueness: true, presence: true
@@ -30,10 +30,6 @@ class Repo < ActiveRecord::Base
     end
 
     repo
-  end
-
-  def master_config_enabled?
-    master_config_enabled && master_config.present?
   end
 
   def activate

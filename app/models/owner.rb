@@ -8,4 +8,8 @@ class Owner < ActiveRecord::Base
     owner.save!
     owner
   end
+
+  def has_master_config?
+    master_config_enabled? && master_config.present?
+  end
 end

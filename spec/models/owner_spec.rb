@@ -36,4 +36,42 @@ describe Owner do
       end
     end
   end
+
+  describe "#has_master_config?" do
+    context "when the repo has enabled the master config" do
+      it "returns true" do
+        owner = build(
+          :owner,
+          master_config_enabled: true,
+          master_config: "thoughtbot/hound",
+        )
+
+        expect(owner.has_master_config?).to eq true
+      end
+
+      context "when the repo has not specified a master config" do
+        it "returns false" do
+          owner = build(
+            :owner,
+            master_config_enabled: true,
+            master_config: "",
+          )
+
+          expect(owner.has_master_config?).to eq false
+        end
+      end
+    end
+
+    context "when the repo has disabled the master config" do
+      it "returns false" do
+        owner = build(
+          :owner,
+          master_config_enabled: false,
+          master_config: "thoughtbot/hound",
+        )
+
+        expect(owner.has_master_config?).to eq false
+      end
+    end
+  end
 end
