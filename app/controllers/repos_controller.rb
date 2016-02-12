@@ -8,7 +8,9 @@ class ReposController < ApplicationController
           current_user.repos.clear
         end
 
-        repos = current_user.repos_and_orphaned_subscription_repos
+        repos =
+          OrphanedAndMembershipReposByActivationAbilityQuery.new(current_user).
+          run
 
         render json: repos
       end
