@@ -21,6 +21,12 @@ class RepoSerializer < ActiveModel::Serializer
   end
 
   def admin
-    object.memberships.find_by(user_id: current_user.id).admin?
+    membership.present? && membership.admin?
+  end
+
+  private
+
+  def membership
+    @membership ||= object.memberships.find_by(user_id: current_user.id)
   end
 end

@@ -8,7 +8,7 @@ class ReposController < ApplicationController
           current_user.repos.clear
         end
 
-        repos = current_user.repos_by_activation_ability.includes(:subscription)
+        repos = current_user.repos_and_orphaned_subscription_repos
 
         render json: repos
       end

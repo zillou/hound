@@ -60,6 +60,33 @@ class User < ActiveRecord::Base
       order(active: :desc, full_github_name: :asc)
   end
 
+  def repos_and_orphaned_subscription_repos
+    Repo.find_by_sql([<<-SQL, id: id])
+      SELECT
+        repos.*
+      FROM
+        repos
+        INNER JOIN subscriptions
+          ON subscriptions.repo_id = repos.id
+      WHERE
+        subscriptions.user_id = :id
+      UNION ALL (
+        SELECT
+          repos.*
+        FROM
+          repos
+          INNER JOIN memberships
+            ON memberships.repo_id = repos.id
+        WHERE
+          memberships.user_id = :id
+        ORDER BY
+          memberships.admin DESC,
+          repos.active DESC,
+          repos.full_github_name ASC
+      )
+    SQL
+  end
+
   private
 
   def crypt
