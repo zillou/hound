@@ -21,7 +21,8 @@ class RepoSerializer < ActiveModel::Serializer
   end
 
   def admin
-    membership.present? && membership.admin?
+    (membership.present? && membership.admin?) ||
+      current_user.subscribed_repos.include?(object)
   end
 
   private
