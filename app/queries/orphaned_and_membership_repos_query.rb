@@ -4,7 +4,7 @@ class OrphanedAndMembershipReposQuery
   end
 
   def run
-    repos = @user.subscribed_repos.includes(:subscription)
-    repos |= @user.repos_by_activation_ability.includes(:subscription)
+    @user.subscribed_repos.includes(:subscription) |
+      @user.repos_by_activation_ability.includes(:subscription)
   end
 end

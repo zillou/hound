@@ -27,19 +27,4 @@ describe ReposController do
       end
     end
   end
-
-  context "when current user is not a member of a repo but has a subscription for it" do
-    it "includes the repo in the response" do
-      subscribed_repo = create(:repo, private: true)
-      user = create(:user)
-      create(:subscription, user: user, repo: subscribed_repo)
-      stub_sign_in(user)
-
-      get :index, format: :json
-
-      expect(JSON.parse(response.body)).to include(
-        hash_including("id" => subscribed_repo.id),
-      )
-    end
-  end
 end
