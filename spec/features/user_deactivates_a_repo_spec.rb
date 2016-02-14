@@ -8,8 +8,12 @@ feature "user deactivates a repo", js: true do
         user = create(:user, token_scopes: "public_repo,user:email")
         repo = create(:repo, :active, private: true)
         create(:subscription, user: user, repo: repo)
-        gateway_subscription = double(unsubscribe: true)
-        payment_gateway_customer = double(
+        gateway_subscription = instance_double(
+          PaymentGatewaySubscription,
+          unsubscribe: true,
+        )
+        payment_gateway_customer = instance_double(
+          PaymentGatewayCustomer,
           retrieve_subscription: gateway_subscription,
         )
         allow(PaymentGatewayCustomer).to receive(:new).and_return(
@@ -20,8 +24,6 @@ feature "user deactivates a repo", js: true do
         find(".repos .toggle").click
 
         expect(page).not_to have_css(".active")
-        expect(user.repos.active.count).to eq(0)
-        expect(gateway_subscription).to have_received(:unsubscribe)
 
         visit current_path
 
