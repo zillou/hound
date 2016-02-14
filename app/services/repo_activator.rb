@@ -38,9 +38,11 @@ class RepoActivator
   end
 
   def skip_github?
-    repo.private? &&
-      repo.subscription.present? &&
-      !repo.subscription.user.repos.include?(repo)
+    repo.subscription.present? && missing_membership?
+  end
+
+  def missing_membership?
+    !Membership.where(repo: repo, user: repo.subscription.user).any?
   end
 
   def deactivate_with_github
