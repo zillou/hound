@@ -1,4 +1,4 @@
-class OrphanedAndMembershipReposQuery
+class ReposWithMembershipOrSubscriptionQuery
   def initialize(user)
     @user = user
   end

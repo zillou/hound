@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe OrphanedAndMembershipReposQuery do
+describe ReposWithMembershipOrSubscriptionQuery do
   describe "#run" do
     context "when user is not a member of a repo but has a subscription" do
       it "includes the orphaned repo" do
@@ -8,7 +8,7 @@ describe OrphanedAndMembershipReposQuery do
         user = create(:user)
         create(:subscription, user: user, repo: subscribed_repo)
 
-        repos = OrphanedAndMembershipReposQuery.new(user).run
+        repos = ReposWithMembershipOrSubscriptionQuery.new(user).run
 
         expect(repos).to include(subscribed_repo)
       end
@@ -20,7 +20,7 @@ describe OrphanedAndMembershipReposQuery do
       user.repos << subscribed_repo
       create(:subscription, user: user, repo: subscribed_repo)
 
-      repos = OrphanedAndMembershipReposQuery.new(user).run
+      repos = ReposWithMembershipOrSubscriptionQuery.new(user).run
 
       expect(repos).to eq [subscribed_repo]
     end
