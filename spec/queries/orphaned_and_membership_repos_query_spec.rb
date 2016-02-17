@@ -13,5 +13,16 @@ describe OrphanedAndMembershipReposQuery do
         expect(repos).to include(subscribed_repo)
       end
     end
+
+    it "does not duplicate subscribed repos" do
+      user = create(:user)
+      subscribed_repo = create(:repo, private: true)
+      user.repos << subscribed_repo
+      create(:subscription, user: user, repo: subscribed_repo)
+
+      repos = OrphanedAndMembershipReposQuery.new(user).run
+
+      expect(repos).to eq [subscribed_repo]
+    end
   end
 end

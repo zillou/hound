@@ -42,7 +42,7 @@ class RepoActivator
   end
 
   def missing_membership?
-    !Membership.where(repo: repo, user: repo.subscription.user).any?
+    Membership.where(repo: repo, user: repo.subscription.user).empty?
   end
 
   def deactivate_with_github
