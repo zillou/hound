@@ -7,7 +7,8 @@ module Config
     private
 
     def parse(file_content)
-      Parser.yaml(file_content)
+      content_without_comments = JsonComments.new(file_content).remove
+      Parser.yaml(content_without_comments)
     end
 
     def default_content
